@@ -1,0 +1,18 @@
+Goals:
+-Learn PID
+-Learn more arduino
+-Do awesome stuff
+
+Setup:
+synchronize two DC motors
+
+Steps:
+-Build encoder  + rig
+-Get RPM read in from 1 motor + display serial (pot input)
+-Get 2 independent rpm readings
+-1x PID RPM
+-2x pid rpm
+-get master/slave rpm
+-Introduce position reading
+-Get master/slave with position synch
+-Get master slave + absolute position (number of turns)

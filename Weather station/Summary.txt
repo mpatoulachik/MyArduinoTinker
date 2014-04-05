@@ -1,0 +1,17 @@
+Goals:
+Make an arduino weather station
+
+Hardware:
+-Arduino
+RHT03 Temp/humidity sensor
+Barometric sensor (T5403 ?)
+LCD
+RTC
+SD shield
+
+
+Steps
+-Read temp, humidity and pressure
+-Display on LCD
+-Log on SD (with time data)
+-Show barometric trend over the last hours
