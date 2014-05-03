@@ -23,6 +23,7 @@ Pin 3 is available only if DC motor 2 and stepper1 are NOT used
 --> Use DC motors as 3 and 4
 
 Note that motor.setspeed is 0-255 and an analogRead (Pot) is 0-1023
+The wheel has 48 teeth, the motor goes at about 120rpm max. that is a tick every 10 ms, which should be plenty fr the arduino to do its stuff between interrupts. (I guess...)
 
 Motor as M3
 Optosensor as I2
@@ -45,7 +46,7 @@ Pot as A0
 #include <AFMotor.h>
 
 int ledPin = 13;    //onboard led
-int potPin = 0;
+int potPin = 0;     //Potentiometer wiper
 AF_DCMotor motor(3); // create motor #3, 
 volatile bool ledState = LOW;             //State of the led
 volatile unsigned long counter = 0;       //Tick counter
@@ -84,8 +85,8 @@ void setup()
 void loop() 
 {
   digitalWrite(ledPin, ledState);         //blink the led
-  potVal = analogRead(potPin);
-  motor.setSpeed(potVal/4);
+  potVal = analogRead(potPin);            //Read pot value
+  motor.setSpeed(potVal/4);               //Divide by four to get the 1024 to be a 256; Set this as motor speed
 
   motor.run(FORWARD);                     // turn motor on going forward
   //delay(500);
