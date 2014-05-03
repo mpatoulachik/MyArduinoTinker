@@ -68,7 +68,7 @@ void setup()
   //pinMode(potPin, INPUT);
   Serial.begin(9600);                     // set up Serial library at 9600 bps
   motor.setSpeed(200);                    // set the speed to 200/255
-  attachInterrupt(0, state, CHANGE);      //activate the interrupt
+  attachInterrupt(0, state, RISING);      //activate the interrupt
 }
 
 
