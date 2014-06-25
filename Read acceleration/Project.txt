@@ -1,0 +1,2 @@
+-Read analog avalues of 2 pots and plot in in processing
+-Read IMU data and plot
