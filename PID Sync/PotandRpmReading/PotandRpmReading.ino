@@ -58,10 +58,11 @@ AF_DCMotor motor(3); // create motor #3,
 volatile bool ledState = LOW;             //State of the led
 volatile unsigned long counter = 0;       //Tick counter
 unsigned long newMillis = 0;              //time counting
-volatile unsigned long cntMicros = 0;              //time counting for RPM counter
-float rpm = 0;
+volatile unsigned long microStart = 0;              //time counting for RPM counter
+float rpm = 0.0;
 unsigned int potVal = 0;						//Read value of the pot
 unsigned long elapsedMicros = 0;
+volatile bool counting = 0;
 
 //  ███████╗███████╗████████╗██╗   ██╗██████╗ 
 //  ██╔════╝██╔════╝╚══██╔══╝██║   ██║██╔══██╗
@@ -78,7 +79,7 @@ void setup()
   //pinMode(potPin, INPUT);
   Serial.begin(9600);                     // set up Serial library at 9600 bps
   motor.setSpeed(200);                    // set the speed to 200/255
-  attachInterrupt(0, state, RISING);      //activate the interrupt
+  
 }
 
 
@@ -98,8 +99,8 @@ void loop()
   motor.setSpeed(potVal/4);               //Divide by four to get the 1024 to be a 256; Set this as motor speed
 
   motor.run(FORWARD);                     // turn motor on going forward
-elapsedMicros = 
-rpm = 60/cntMicros*nTeeth/1000000;
+
+rpm = (float)elapsedMicros * (float)nTeeth / 1000000.0 * 60.0; //// This calc is fucked up, but the rest seems to work.
 
 
 
@@ -107,18 +108,22 @@ rpm = 60/cntMicros*nTeeth/1000000;
 
   //delay(500);
        if(millis() >= newMillis+500){          //Just some delay for slower serial update. No delay() because it would stop the rest of the action as well 
-                Serial.print("Led");
+                Serial.print(" Led ");
                 Serial.print(ledState);                 //Serial out for debugging
-                Serial.print("-Cnt");
-                Serial.print(cntMicros);
-                Serial.print("-pot");
+                Serial.print(" -Cnt ");
+                Serial.print(counter);
+                Serial.print(" -pot ");
                 Serial.print(potVal);
-    			Serial.print("rpm");
+                Serial.print(" elapsed ");
+                Serial.print(elapsedMicros);
+                Serial.print(" counting ");
+                Serial.print(counting);
+    			Serial.print(" rpm ");
                 Serial.println(rpm);
 
                 newMillis = millis();
               }
-cntMicros = micros();
+attachInterrupt(0, state, RISING);      //activate the interrupt
 }
   
   
@@ -136,6 +141,13 @@ cntMicros = micros();
 
 void state(){                             //This is the function called by the interrupt
 	ledState = !ledState;              //toggle the led state
-  	cntMicros = micros();
   	++ counter;                             //increment the counter
+    if(counting == 1){
+        elapsedMicros = micros() - microStart;
+        counting = 0;
+        detachInterrupt(0);
+    } else {
+        microStart = micros();
+        counting = 1;
+    }
 }
