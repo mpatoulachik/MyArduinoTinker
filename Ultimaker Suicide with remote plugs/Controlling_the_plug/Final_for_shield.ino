@@ -50,11 +50,12 @@ if(digitalRead(enablePin)==0){
 
 
   //Serial.println(digitalRead(UltiPin));
+
   digitalWrite(ledpin,HIGH);
   StartMillis=(millis() + 10000);
   // check if the Ulti has been done for 10 solid seconds and then start the shutdown sequence.
   // the input is active as long as the Ultimaker is on
-  while(digitalRead(UltiPin)==0){
+  while(digitalRead(UltiPin)==1){
     
     Serial.println("counting");
     Serial.print("CD: ");
