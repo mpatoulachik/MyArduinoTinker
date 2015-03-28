@@ -1,7 +1,7 @@
 /*
-  We use my Nexa shield on a Uno.
+  We use my suicide shield on a Uno.
   Output pin for the transmitter is #11
-  Input pin from the optocoupler is #12
+  Input pin from the optocoupler is #12 This is monitoring Ultimaker pin A0. A0 is put high when Marlin starts and down when a M81 code is read
   Pins 8 and 9 are broken out as well for future purposes. Let's say pin 9 is for a cooldown fan and pin 8 is for enabling the function.
   Pin 13 with led is used to indicate status (OFF= printer should be killed)
 
@@ -41,6 +41,7 @@ pinMode(enablePin, INPUT_PULLUP);
 
   Serial.begin(9600);
   Serial.println("Start");
+  delay(10000); //give the printer time to start and activate the output pin
 }
 
 void loop() {
@@ -62,6 +63,7 @@ if(digitalRead(enablePin)==0){
     Serial.println(StartMillis);
     if(millis() >= (StartMillis)){
       Serial.println("call suicide func");
+      //cooldown(); 
       suicide();
       
       }
@@ -122,10 +124,12 @@ void suicide()  {
 }
 
 void cooldown() {
+  Serial.println("starting cooldown")
   //Activates a cooldown fan for n seconds
   for(int i=0; i<CooldownTime; i++){
       digitalWrite(fanPin, HIGH);
-      delay(1000);
+      delay(1000); //each iteration is a second long (give or take a few ms)
   }
   digitalWrite(fanPin, LOW);
+  delay(1000);
 }
